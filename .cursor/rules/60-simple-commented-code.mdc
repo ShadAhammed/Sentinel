@@ -1,0 +1,28 @@
+---
+description: Sentinel-X extra rule - keep code very simple and comment it.
+alwaysApply: true
+---
+
+# Simple, Commented Code
+
+This project uses CursorRules-Shad (`00` to `50`). Those rules stay in force.
+
+On top of Shad, every Sentinel-X script must be easy to read.
+
+- Write very simple code. Prefer a short function over a clever one-liner.
+- Add comments that explain what the next block does and why.
+- Do not add classes, frameworks, or extra packages when a few functions will do.
+- Use `Path(__file__)` for paths. Do not hardcode `E:\` or other machine paths.
+- One file should do one job. If the user asks only for a script, do not add extra files.
+- Never use the em dash character. Use a hyphen.
+
+```python
+# BAD - hard to follow, no comments, extra abstraction
+class CropFactory(ABC):
+    def make(self, *a, **k): ...
+
+# GOOD - simple steps with comments
+# Convert a YOLO box from 0-1 values to pixel x1,y1,x2,y2.
+def yolo_to_pixels(box, width, height):
+    return ...
+```

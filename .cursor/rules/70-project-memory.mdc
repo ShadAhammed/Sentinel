@@ -1,0 +1,139 @@
+---
+description: Living SENTINEL-X project memory. Injected into every chat. Update after every prompt.
+alwaysApply: true
+---
+
+# SENTINEL-X project memory
+
+This file is the handoff for a **new agent chat**. Read it as current project
+state. Do not wait for the user to recap.
+
+## Maintain this file (mandatory)
+
+Before ending a turn, if the prompt changed files, data, decisions, status,
+or next steps, **edit this same file**. Keep facts, not chat logs.
+
+- Update the snapshot, key paths, numbers, and "Last change" section.
+- Remove facts that are no longer true.
+- Never copy secrets, API keys, or `.env` values here.
+- Never use the em dash character. Use a hyphen.
+- Keep this file short enough to scan.
+
+## Project
+
+SENTINEL-X is a research demonstrator: air-gapped heterogeneous Edge AI for
+reconnaissance and human-in-the-loop situational awareness.
+
+Target event: defence / security expo, 24 September 2026, Essen.
+Position as a technology demonstrator, not a finished military product, and
+not an autonomous weapon.
+
+Intended stack (not built yet as a live system):
+- Airborne: camera -> Jetson Orin NX (CV, RAG/VLM) + MCXN947 (independent verify)
+- Ground: Raspberry Pi 5 (Whisper / local SLM / Piper) + operator
+
+## Code rules already in this repo
+
+Shad rules `00` to `50`, plus `60-simple-commented-code.mdc`:
+simple functions, comments, `Path(__file__)`, no extra packages, no `E:\` paths.
+
+## Data
+
+Source detection sets live under `Data/YOLO/`:
+- `KIIT-MiTA` - YOLO, 7 classes, 1360/170/170 (train/test/valid)
+- `military_object_dataset` - YOLO, 12 classes, 21978/1396/2941 (train/test/val)
+- `MV` - YOLO, 5 classes (air-fighter, armoured personnel carrier, bomber, soldier, tank). Folders train/valid/test.
+- SULAND v2 is no longer under `Data/YOLO`. VISDRONE was removed.
+
+Catalog: `Data/DATASETS.md`
+
+Label overlap: names are not a shared taxonomy. Letter-by-letter clash
+(case ignored) is only soldier:
+`Soldier_KIIT-MiTA` vs `soldier_military_object_dataset`.
+
+## CNN crops
+
+1. `Data/localize.py` crops every box into `Data/CNN/` plus `Data/CNN/labels.csv`.
+2. `Data/make_cnn_data.py` copies a smaller set into `Data/CNN-Data/`.
+   Training (train + validation) is capped at 1000 per label. Test is capped
+   at 50 per label. Dropped labels and merges are in that script.
+
+Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
+- Layout: `train/<label>/`, `test/<label>/`, `validation/<label>/`, `labels.csv`
+- 10 labels. Training instances 8,743. Test instances 572. Total 9,315.
+- Removed: car, Vehicle, van, truck, bus, motor, bicycle, tricycle,
+  awning-tricycle, people, pedestrian, civilian, civilian_vehicle, weapon.
+- Merged: military_tank, Tank, and military_truck into military_vehicle;
+  military_artillery and Artilary into Artillery;
+  Soldier_KIIT-MiTA and soldier_military_object_dataset into Soldier.
+  camouflage_soldier stays separate.
+- Trench train and test were swapped: 37 training images, 7 test images.
+- military_warship: 900 training, 100 test. The 100 test crops are 10% of the
+  previous 1,000 training crops (seed 42). Do not run
+  `make_cnn_data.reshape_existing()`: the test cap of 50 would delete
+  50 of those warship test crops.
+- `labels.csv` matches the files on disk.
+- Full crop dump still lives in `Data/CNN/` (55388 rows after the VISDRONE
+  crops were removed). Do not delete it unless the user asks.
+- Edge Impulse project `Sentinel-X` (id 1117835) still has the previous
+  12-label upload. It does not include this vehicle merge or trench swap.
+
+## Key files
+
+- `SENTINEL-X Project Description.md` - architecture and expo positioning
+- `Data/DATASETS.md` - dataset tables
+- `Data/localize.py` - full crop pipeline
+- `Data/make_cnn_data.py` - CNN-Data sampler (training max 1000, test max 50)
+- `Data/EffNet.py` - EfficientNet-B0 trainer (224x224, ImageNet, 10 classes, cosine LR, light augmentation). Refuses crops with short side under 32.
+- `Data/EffNet_b0.pt` - 10-class checkpoint from the 21 Sep 2026 224 retrain
+- `Data/test_effnet.py` - unit test for the 32-pixel crop gate
+- `Data/YOLO/<dataset>/run_yolo.py` - short Ultralytics script under `if __name__ == "__main__"`. Train line uses `device=0` so it runs on the RTX 3060. Change the `YOLO("...")` name, then run that file.
+- `Data/upload_to_edge_impulse.py` - Edge Impulse uploader for CNN-Data crops
+- `Data/EDGE_IMPULSE_CNN.md` - Edge Impulse workflow notes
+- `.env` exists. Never read it into memory or commit it.
+
+## Hardware
+
+- 22 Sep 2026: FRDM-MCXN947 is on USB via J17. MCU-LINK CMSIS-DAP V3.128, serial ASSB42DOVHG3Y, COM6. LinkServer 26.6.137 is in C:\nxp\LinkServer_26.6.137. ARM GNU 14.2.1, CMake, Ninja, and Python are in C:\Users\august\.mcuxpressotools. Config Tools 26.06 are in C:\nxp\MCUX_CFG_26.06. SDK and hello_world_cm33_core0 are under C:\nxp\mcx\sdk (also C:\nxp\mcx\sdk\hello\frdmmcxn947_hello_world_cm33_core0). MCUXpresso for VS Code 26.8.29 is installed in Cursor. The activity-bar icon is easy to miss; open it with View: Open View.
+
+## Last change (22 Sep 2026)
+
+- Removed VISDRONE from code, `Data/DATASETS.md`, the YOLO source/train/run/model
+  folders, and the `Data/CNN` crop dump (457057 crops removed, 55388 kept).
+- Each YOLO dataset folder has its own `run_yolo.py` and `data.yaml`:
+  `Data/YOLO/KIIT-MiTA`, `Data/YOLO/military_object_dataset`, and `Data/YOLO/MV`.
+  Change the model name in that script, then run it from the folder. `Data/YOLO-Models`,
+  `Data/YOLO-Train`, and `Data/YOLO-Runs` were removed. Do not start training unless asked.
+- Finished weights now sit in the dataset folder: `Data/YOLO/KIIT-MiTA/yolo26m.pt`
+  (test mAP50 0.6884, 6 remapped classes) and `Data/YOLO/MV/yolo26m.pt`
+  (test mAP50 0.5663, the 5 names in `data.yaml`). military_object_dataset
+  has no finished weights.
+- SULAND v2 is no longer in `Data/YOLO`. The catalog section is still in `Data/DATASETS.md`.
+- Linux training server in `.env` is a University of Siegen host (`server-adso.es.eti.uni-siegen.de`). OpenVPN is required. After VPN, ping works and Remote Desktop port 3389 is open. Port 22 is dropped by the campus firewall, so SSH from this PC does not connect. Tailscale 1.102.4 is installed on the server and is not logged in. The user will clone the private GitHub repo `ShadAhammed/Sentinel` on that machine instead. Do not copy `.env` values here.
+- FRDM-MCXN947 is reachable on J17: MCU-Link CMSIS-DAP V3.128, serial ASSB42DOVHG3Y, COM6 opens.
+- MCUXpresso for VS Code was installed in Cursor from `mcuxpresso-26.8.29.vsix`.
+
+## Previous (21 Sep 2026)
+
+- Retrained `Data/EffNet.py` at 224x224 with cosine LR and light
+  augmentation. Crops with short side under 32 were refused: train 6860
+  kept / 851 refused, validation 923 / 109, test 510 / 62.
+- Best validation accuracy 0.8797 at epoch 9. Test accuracy 0.8765
+  (447/510), test loss 0.6035. Checkpoint `Data/EffNet_b0.pt`.
+- Test recall: military_aircraft 48/48, military_warship 95/99,
+  Radar 32/34, camouflage_soldier 45/49, M. Rocket Launcher 41/45,
+  Soldier 25/29, military_vehicle 95/114, Artillery 39/49,
+  Missile 23/36, trench 4/7. Edge Impulse was not updated.
+- Missile and M. Rocket Launcher stay separate. Only 3 source photos
+  carry both labels.
+- `Data/mistake/<true label>/` holds the 63 wrong test crops and the 54
+  full source photos those crops came from. Crop files start with
+  `pred-<wrong label>__`. Source photos start with `<true label>__pred-`.
+  military_aircraft has no mistakes. Edge Impulse was not updated.
+
+## Next (if the user does not specify)
+
+Hello World is running on the FRDM-MCXN947. Debug session started 1:28 AM (LinkServer probe ASSB42DOVHG3Y, core cm33_core0). COM6 at 115200 printed "MCUX SDK version: 2026.06.00" and "hello world." once at startup, then waits for a key. Serial Monitor 0.13.1 is installed in Cursor and currently holds COM6.
+Wait for a request before training a new Edge Impulse model. The current
+Studio model is still the older MobileNetV2 run.
+Private GitHub repo: https://github.com/ShadAhammed/Sentinel. `.env`, `Data/CNN`, `Data/mistake`, and the root `yolo26n.pt` duplicate are not in the repo. Clone that repo on the Linux GPU machine. SSH port 22 is still blocked from this PC.

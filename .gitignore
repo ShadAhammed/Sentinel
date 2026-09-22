@@ -1,0 +1,20 @@
+# Secrets stay on this PC. Copy the values into a local .env after clone.
+.env
+
+# Python caches.
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Full crop dump. Data/CNN-Data is the working set. localize.py can rebuild this.
+Data/CNN/
+
+# Saved mistake review copies. The trainer can rebuild them.
+Data/mistake/
+
+# Empty local run folders.
+runs/
+Data/runs/
+
+# Same file as Data/yolo26n.pt.
+/yolo26n.pt
