@@ -1,0 +1,12 @@
+# Class names for the MV labels in this folder.
+# Validation is valid/images. Test is test/images.
+train: train/images
+val: valid/images
+test: test/images
+
+names:
+  0: air-fighter
+  1: "armoured personnel carrier"
+  2: bomber
+  3: soldier
+  4: tank

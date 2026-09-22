@@ -1,0 +1,25 @@
+These scores use the remapped 6-class training labels. data.yaml lists the 7 original names in the label files.
+
+Validation
+precision 0.7137
+recall 0.7088
+mAP50 0.7213
+mAP50-95 0.4750
+  Artillery: precision 0.8002 recall 0.8462 mAP50 0.8063 mAP50-95 0.4441
+  M. Rocket Launcher: precision 0.7663 recall 0.7769 mAP50 0.8139 mAP50-95 0.5991
+  Missile: precision 0.6711 recall 0.6818 mAP50 0.6898 mAP50-95 0.5339
+  Radar: precision 0.6053 recall 0.5667 mAP50 0.5354 mAP50-95 0.2855
+  Soldier: precision 0.6077 recall 0.5926 mAP50 0.6142 mAP50-95 0.3709
+  military_vehicle: precision 0.8317 recall 0.7886 mAP50 0.8680 mAP50-95 0.6162
+
+Test
+precision 0.6919
+recall 0.6343
+mAP50 0.6884
+mAP50-95 0.4543
+  Artillery: precision 0.9168 recall 0.5510 mAP50 0.7265 mAP50-95 0.3813
+  M. Rocket Launcher: precision 0.7826 recall 0.8667 mAP50 0.8639 mAP50-95 0.6942
+  Missile: precision 0.7113 recall 0.4722 mAP50 0.6720 mAP50-95 0.5315
+  Radar: precision 0.4535 recall 0.4412 mAP50 0.4145 mAP50-95 0.2411
+  Soldier: precision 0.6134 recall 0.7333 mAP50 0.6676 mAP50-95 0.3670
+  military_vehicle: precision 0.6740 recall 0.7414 mAP50 0.7860 mAP50-95 0.5108

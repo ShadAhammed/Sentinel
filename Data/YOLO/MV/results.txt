@@ -1,0 +1,21 @@
+Validation
+precision 0.6389
+recall 0.4953
+mAP50 0.5542
+mAP50-95 0.3434
+  air-fighter: precision 0.4457 recall 0.3824 mAP50 0.4086 mAP50-95 0.1993
+  armoured personnel carrier: precision 0.7584 recall 0.5750 mAP50 0.6836 mAP50-95 0.4684
+  bomber: precision 0.6274 recall 0.5450 mAP50 0.5759 mAP50-95 0.4367
+  soldier: precision 0.6158 recall 0.2574 mAP50 0.2904 mAP50-95 0.1373
+  tank: precision 0.7472 recall 0.7164 mAP50 0.8127 mAP50-95 0.4754
+
+Test
+precision 0.7376
+recall 0.4528
+mAP50 0.5663
+mAP50-95 0.3327
+  air-fighter: precision 0.8266 recall 0.3558 mAP50 0.6406 mAP50-95 0.2406
+  armoured personnel carrier: precision 0.7527 recall 0.5493 mAP50 0.6797 mAP50-95 0.4419
+  bomber: precision 0.6810 recall 0.4000 mAP50 0.3950 mAP50-95 0.3258
+  soldier: precision 0.7488 recall 0.3194 mAP50 0.3866 mAP50-95 0.1855
+  tank: precision 0.6791 recall 0.6393 mAP50 0.7294 mAP50-95 0.4696

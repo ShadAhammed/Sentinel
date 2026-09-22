@@ -136,4 +136,4 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
 Hello World is running on the FRDM-MCXN947. Debug session started 1:28 AM (LinkServer probe ASSB42DOVHG3Y, core cm33_core0). COM6 at 115200 printed "MCUX SDK version: 2026.06.00" and "hello world." once at startup, then waits for a key. Serial Monitor 0.13.1 is installed in Cursor and currently holds COM6.
 Wait for a request before training a new Edge Impulse model. The current
 Studio model is still the older MobileNetV2 run.
-Private GitHub repo: https://github.com/ShadAhammed/Sentinel. `.env`, `Data/CNN`, `Data/mistake`, and the root `yolo26n.pt` duplicate are not in the repo. Clone that repo on the Linux GPU machine. SSH port 22 is still blocked from this PC.
+Private GitHub repo: https://github.com/ShadAhammed/Sentinel. It has the code, Cursor rules, yaml, run scripts, and weights. Image datasets stay on this PC (`.env`, `Data/CNN`, `Data/CNN-Data`, YOLO images and labels). Clone that repo on the Linux GPU machine. SSH port 22 is still blocked from this PC.

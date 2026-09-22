@@ -6,8 +6,13 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Full crop dump. Data/CNN-Data is the working set. localize.py can rebuild this.
+# Image datasets stay on this PC. The repo keeps scripts, yaml, and weights.
 Data/CNN/
+Data/CNN-Data/
+Data/YOLO/**/images/
+Data/YOLO/**/labels/
+Data/YOLO/**/labels.cache
+Data/YOLO/**/runs/
 
 # Saved mistake review copies. The trainer can rebuild them.
 Data/mistake/

@@ -1,0 +1,14 @@
+# Class names for the KIIT-MiTA labels in this folder.
+# Validation is valid/images. Test is test/images.
+train: train/images
+val: valid/images
+test: test/images
+
+names:
+  0: Artilary
+  1: Missile
+  2: Radar
+  3: "M. Rocket Launcher"
+  4: Soldier
+  5: Tank
+  6: Vehicle
