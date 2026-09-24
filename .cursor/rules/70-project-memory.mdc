@@ -180,5 +180,5 @@ Current **CNN-Data** (MV crops added 23 Sep 2026):
 ## Next (if the user does not specify)
 
 Demo path is the Jetson Orin NX 16GB: YOLO26s or the existing YOLO26m detector, then `Data/EffNet_b0.pt` on the crops. Leave the MCXN947 and Edge Impulse alone unless asked.
-Private GitHub repo: https://github.com/ShadAhammed/Sentinel. It has the code, Cursor rules, yaml, run scripts, and weights. Image datasets stay on this PC. A transfer archive `E:\sentinel-datasets.tar` holds `Data/YOLO` and `Data/CNN-Data` for copy over Remote Desktop. SSH port 22 is still blocked from this PC.
+Private GitHub repo: https://github.com/ShadAhammed/Sentinel. Pushed 24 Sep 2026 (`a02d560d`). It has the code, Cursor rules, yaml, run scripts, and weights. Videos (`*.mp4`), `Data/CNN-MV/`, demo photos, and `Data.tar` stay on this PC and are gitignored. Two local base weights are also untracked: `Data/YOLO/KIIT-MiTA/yolo26n.pt` and `yolov8n.pt`. Image datasets stay on this PC. A transfer archive `E:\sentinel-datasets.tar` holds `Data/YOLO` and `Data/CNN-Data` for copy over Remote Desktop. SSH port 22 is still blocked from this PC.
 German executive summary: `SENTINEL-X Kurzfassung.docx`. Justified body text. Audience is an entrepreneurship center judging how innovative the project is. Partner pitch was removed. The English markdown stays.
