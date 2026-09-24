@@ -29,7 +29,7 @@ Position as a technology demonstrator, not a finished military product, and
 not an autonomous weapon.
 
 Intended stack (not built yet as a live system):
-- Airborne: camera -> Jetson Orin NX (CV, RAG/VLM) + MCXN947 (independent verify)
+- Airborne: camera -> Jetson Orin NX 16GB (CV, RAG/VLM). The user has this board. MCXN947 verification is skipped for now.
 - Ground: Raspberry Pi 5 (Whisper / local SLM / Piper) + operator
 
 ## Code rules already in this repo
@@ -42,7 +42,7 @@ simple functions, comments, `Path(__file__)`, no extra packages, no `E:\` paths.
 Source detection sets live under `Data/YOLO/`:
 - `KIIT-MiTA` - YOLO, 7 classes, 1360/170/170 (train/test/valid)
 - `military_object_dataset` - YOLO, 12 classes, 21978/1396/2941 (train/test/val)
-- `MV` - YOLO, 5 classes (air-fighter, armoured personnel carrier, bomber, soldier, tank). Folders train/valid/test.
+- `MV` - YOLO, 3 classes (armoured personnel carrier, soldier, tank). Air-fighter and bomber were removed 23 Sep 2026. 2,702 files from 735 source photos. Old 5-class weights are `Data/YOLO/MV/yolo26m_5class.pt`.
 - SULAND v2 is no longer under `Data/YOLO`. VISDRONE was removed.
 
 Catalog: `Data/DATASETS.md`
@@ -58,9 +58,12 @@ Label overlap: names are not a shared taxonomy. Letter-by-letter clash
    Training (train + validation) is capped at 1000 per label. Test is capped
    at 50 per label. Dropped labels and merges are in that script.
 
-Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
+Current **CNN-Data** (MV crops added 23 Sep 2026):
 - Layout: `train/<label>/`, `test/<label>/`, `validation/<label>/`, `labels.csv`
-- 10 labels. Training instances 8,743. Test instances 572. Total 9,315.
+- 10 labels. Training instances 9,541. Test instances 617. Total 10,158.
+- Added 843 MV crops from one file per source photo: carriers and tanks into
+  military_vehicle, MV soldiers into camouflage_soldier. 345 MV boxes were
+  refused because the short side was under 32.
 - Removed: car, Vehicle, van, truck, bus, motor, bicycle, tricycle,
   awning-tricycle, people, pedestrian, civilian, civilian_vehicle, weapon.
 - Merged: military_tank, Tank, and military_truck into military_vehicle;
@@ -71,7 +74,7 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
 - military_warship: 900 training, 100 test. The 100 test crops are 10% of the
   previous 1,000 training crops (seed 42). Do not run
   `make_cnn_data.reshape_existing()`: the test cap of 50 would delete
-  50 of those warship test crops.
+  50 of those warship test crops and would also drop the added MV crops.
 - `labels.csv` matches the files on disk.
 - Full crop dump still lives in `Data/CNN/` (55388 rows after the VISDRONE
   crops were removed). Do not delete it unless the user asks.
@@ -84,9 +87,24 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
 - `Data/DATASETS.md` - dataset tables
 - `Data/localize.py` - full crop pipeline
 - `Data/make_cnn_data.py` - CNN-Data sampler (training max 1000, test max 50)
+- `Data/add_mv_to_cnn.py` - copies one MV source photo's crops into CNN-Data.
 - `Data/EffNet.py` - EfficientNet-B0 trainer (224x224, ImageNet, 10 classes, cosine LR, light augmentation). Refuses crops with short side under 32.
-- `Data/EffNet_b0.pt` - 10-class checkpoint from the 21 Sep 2026 224 retrain
+- `Data/EffNet_b0.pt` - 23 Sep 2026 retrain after the MV crops were added. Test accuracy 0.8901 (494/555). Same file size, 16,359,802 bytes.
+- `Data/EffNet_b0_before_mv.pt` - the 21 Sep checkpoint, test accuracy 0.8765 on the earlier 510-image test.
+- `Data/hog_svm.py` - linear SVM on 96x96 HOG features, same crop gate as EffNet.
+- `Data/HogSvm.pkl` - 23 Sep 2026. Test accuracy 0.5063 (281/555). File is 349,422 bytes.
+- `Data/simple_cnn.py` - small 96x96 CNN from scratch. Current MV map is carriers and tanks to military_vehicle, soldiers to camouflage_soldier.
+- `Data/SimpleCNN.pt` - 23 Sep 2026 checkpoint. 99,210 parameters, 408,000 bytes. Test accuracy 0.4627 (254/549).
+- `Data/CNN-MV/` - MV crops that passed the 32-pixel gate (3,361 kept, 1,716 refused).
+- `Data/CNN-Combined/labels.csv` - the list the small CNN trained on. Does not replace `Data/CNN-Data`.
+- `Data/test_simple_cnn.py` - label map, cap, and network shape tests
 - `Data/test_effnet.py` - unit test for the 32-pixel crop gate
+- `Data/YOLO-Models-Final/` - three finished weights taken from origin/main on 23 Sep 2026: `KIIT-MiTA-yolo26s.pt` (20,321,797 bytes), `MV-yolo26s.pt` (20,477,189 bytes), `military-yolov8n.pt` (6,325,610 bytes). Commit `66aad224`.
+- `Data/jetson_test.py` - maps YOLO names onto the 10 CNN labels and scores both models on the same crops. `Data/test_jetson_test.py` checks that map.
+- `Data/drone_flight_30s.mp4` - synthetic 30 s, 32 fps, 1280x720 flight (960 frames). Each of the 10 labels is one real training photo for 3 seconds, with a slow camera drift. `Data/drone_flight_30s_objects.csv` lists the frame range and source file. Built by `Data/make_drone_video.py`.
+- `Data/video/cnn_correct/` - 10 wider aerial photos whose objects EfficientNet named correctly, plus `prompt.txt`. Close-up crops were replaced on 23 Sep 2026. Camouflage is the least overhead of the set.
+- `Data/join_and_detect_video.py` - joins every `Data/video/Drone_*.mp4` in timestamp order with an 0.8 s fade, then draws YOLO and EfficientNet on each frame. `Data/test_join_and_detect_video.py` checks the fade times and box overlap.
+- `Data/video/sentinel_demo.py` - demo window. Run `python sentinel_demo.py` from `Data/video`. Chat is 40 percent of the detection row and the video is 60 percent. After a pause, Sentinel version 1.0 types a 60-word introduction. The window loads and warms the three YOLO weights and EfficientNet in the background, then Qwen. Play shows the first frame at once and draws boxes on `combined_drone.mp4`. On the Jetson, YOLO loads the TensorRT `.engine` beside each `.pt` when that file exists. The Credit tab cites KIIT-MiTA, military_object_dataset, and MV.
 - `Data/YOLO/<dataset>/run_yolo.py` - short Ultralytics script under `if __name__ == "__main__"`. Train line uses `device=0` so it runs on the RTX 3060. Change the `YOLO("...")` name, then run that file.
 - `Data/upload_to_edge_impulse.py` - Edge Impulse uploader for CNN-Data crops
 - `Data/EDGE_IMPULSE_CNN.md` - Edge Impulse workflow notes
@@ -94,9 +112,37 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
 
 ## Hardware
 
+- 23 Sep 2026: Jetson Orin NX 16GB, hostname `yahboom`, SSH host alias `jetson`, user `jetson`. `nvidia-smi` reports `GPU 0: Orin`. Home projects were removed. Disk `/` went from 130G used (93G free) to 79G used (145G free).
+- Still on the board because `sudo` asks for a password: `ollama.service` is active and enabled. `/usr/local/bin/ollama` (35 MB), `/usr/local/lib/ollama` (2.7G), `/usr/share/ollama` (11G). Root-owned scraps remain in `~/JEP`, `~/ultralytics`, `~/jetcam`, and `~/jetson-gpio` (about 1.6 MB). Do not delete JetPack, CUDA, `/usr`, `/opt`, or `~/nvme0n1-gpt-before-expand.bin`.
+- Earlier the same day: Jetson Orin NX is on USB. Windows sees NVIDIA USB VID 0955 PID 7020 as Remote NDIS (`Ethernet 4`) plus a Linux File-Stor gadget. This PC is `192.168.55.100`. The board answers ping at `192.168.55.1`.
 - 22 Sep 2026: FRDM-MCXN947 is on USB via J17. MCU-LINK CMSIS-DAP V3.128, serial ASSB42DOVHG3Y, COM6. LinkServer 26.6.137 is in C:\nxp\LinkServer_26.6.137. ARM GNU 14.2.1, CMake, Ninja, and Python are in C:\Users\august\.mcuxpressotools. Config Tools 26.06 are in C:\nxp\MCUX_CFG_26.06. SDK and hello_world_cm33_core0 are under C:\nxp\mcx\sdk (also C:\nxp\mcx\sdk\hello\frdmmcxn947_hello_world_cm33_core0). MCUXpresso for VS Code 26.8.29 is installed in Cursor. The activity-bar icon is easy to miss; open it with View: Open View.
 
-## Last change (22 Sep 2026)
+## Last change (24 Sep 2026)
+
+- The demo is on the Jetson in `/home/jetson/Sentinel`. No monitor is plugged into the board. `attach_desktop()` picks the display: if SSH X11 forwarding already set DISPLAY to `localhost:NN` or `127.x:NN` (from `ssh -X`/`ssh -Y`), it keeps that tunnel and its cookie. Otherwise it draws straight on the SSH client's X server over TCP at `<client-ip>:0.0`. `is_forwarded_display()` tells the two apart. Mac path: install XQuartz and connect with `ssh -Y jetson`, then `python3 sentinel_demo.py`. The old Windows path was VcXsrv plus direct TCP (`%LOCALAPPDATA%\VcXsrv\app\vcxsrv.exe`, `-ac -listen tcp`, started at login). Same file name on either host. Weights are the three YOLO files and `EffNet_b0.pt`. The clip is `combined_drone.mp4`. Detection uses the Orin GPU (`cuda:0`) and refuses CPU. The window loads and warms YOLO and EfficientNet before Play, then loads Qwen, so the two do not share the GPU during the cold start. If Play is pressed early, the first video frame is shown while the weights finish. The picture then plays at the clip rate (24 fps). Detection runs on its own thread at about 7 to 8 fps and the newest boxes are drawn on the current frame. The long wait at open is the first import of PyTorch and Ultralytics, about 25 seconds, and it overlaps the introduction. Qwen2.5 7B Q4 is registered in the board Ollama as `qwen2.5:7b-instruct-q4_K_M` and loads 100 percent on the GPU. The Orin DLA is not used. GPU percent in the window comes from `/sys/devices/platform/gpu.0/load` because `nvidia-smi` on the Orin leaves utilization blank.
+- TensorRT 10.7 FP16 engines were built once on the Orin (24 Sep 2026) in `/home/jetson/Sentinel/YOLO-Models-Final/`: `military-yolov8n.engine` (9,032,173 bytes), `KIIT-MiTA-yolo26s.engine` (22,499,961 bytes), `MV-yolo26s.engine` (22,638,850 bytes). Input is 640. A warm pass is about 17 ms, 27 ms, and 28 ms. These engines do not run on the PC. The `.pt` files stay beside them. The demo loads an `.engine` when it is next to the `.pt`. Qwen was stopped for the build and loads again when the demo starts.
+
+- The chat column is 40 percent of the detection row and the video is 60 percent. The window opens with an empty chat. After about 0.8 seconds, Sentinel types a 60-word introduction, one character at a time, 30 percent faster than the first timing: Sentinel version 1.0, three object detectors, Qwen2.5 7B, YOLO localization, EfficientNet on the crop, and that it is here to detect potential dangers. Ask and Send stay off until the line is finished.
+- Chat answers use the frame on screen (`shown_seconds`), not the last frame the detector has stored. Frames and crops later than that time stay out of the prompt, including after the reader reaches the end of the file. A timeline drag moves that cutoff immediately. The picture plays at the clip rate. Detection runs beside it, so a frame is logged when the detector finishes it, which is a little behind the picture.
+- Observation totals are EfficientNet classifications only. A YOLO box that EfficientNet did not name is not counted. Overlapping YOLO boxes on the same object count once, keeping the higher EfficientNet score. The chat states what was seen and does not explain the counting method.
+- `Data/video/sentinel_demo.py` is the expo window. Run `python sentinel_demo.py` from `Data/video`. The timeline can be dragged. Boxes show only the EfficientNet name and percent. Crops under 32 pixels are not drawn. The right panel is a black chat with bright green text. Answers are in English. Ollama model `qwen2.5:7b-instruct-q4_K_M` (Qwen2.5 7B, Q4_K_M, 4.7 GB, 100 percent GPU). Answers use only frames up to the picture on screen. After that picture reaches the end, answers can cover the whole clip, including a situational assessment. Asking to see a class, for example "show me the warship", opens the clearest YOLO crop of that class from the frames so far. GPU utilized and free memory stay under the chat.
+- Joined the four Google Flow clips in `Data/video/` (timestamp order, 0.8 s crossfade, no audio) into `Data/video/combined_drone.mp4`. 1280x720, 24 fps, 29.67 s, 712 frames.
+- Ran the three YOLO weights and EfficientNet on that video. Overlay is `Data/video/combined_detections.mp4`. Each box shows the YOLO name and confidence, then the CNN name (or "CNN too small" when the short side is under 32). 610 of 712 frames have at least one box.
+- YOLO box counts: Soldier 1462, military_vehicle 467, M. Rocket Launcher 310, Missile 119, military_aircraft 115, Artillery 69, camouflage_soldier 56, Radar 15, military_warship 0, trench 0.
+- CNN crop counts on those same boxes: M. Rocket Launcher 421, Soldier 258, military_vehicle 223, Missile 139, Artillery 131, Radar 130, military_aircraft 122, camouflage_soldier 52, trench 20, military_warship 19.
+- `Data/video/cnn_correct/` holds 10 CNN-correct object photos and a Google Flow prompt. The four clips in `Data/video/` are the result.
+- Added `Data/drone_flight_30s.mp4` for a later detection pass. 30 seconds, 32 fps, 1280x720. Ten training photos, 3 seconds each, in label order from Artillery through trench.
+- Jetson home has `YOLO/` (three final weights plus `labels.txt`) and `CNN/` (`EffNet_b0.pt` plus the same `labels.txt`). Separate tests: `test_images_cnn/` is 5 crops per label, EfficientNet 46/50 (0.9200). `test_images_yolo/` is 5 full photos per label, each photo scored by the one weight trained on that dataset. YOLO found the right label in 30/50 photos (0.6000), and in 30/40 (0.7500) when ships and trenches are left out. Those two classes are not in the three weight files. The ship photos come from the train split because the YOLO test split has no warships. Trench CNN crops still use a second crop from `011227.jpg` because that test set has only 4 photos.
+- Checked out `Data/YOLO-Models-Final/` from origin/main (`66aad224`): KIIT-MiTA-yolo26s.pt, MV-yolo26s.pt, military-yolov8n.pt.
+- Cleared old projects from `jetson@yahboom` home: siegenklar (including its 4.4G models), rex-vision, YOLO/Ultralytics/torchvision checkouts, MuseTalk, FastSD, Isaac ROS workspace, Yahboom workspace, sherpa-onnx, Node tarballs, Hugging Face cache (7.3G), Whisper cache (2.1G), and the home Ollama models (`~/lib/ollama`, `~/.ollama`). Login files, `.ssh`, `.vscode-server`, `.local`, personal folders, and the NVMe partition backup were left.
+- The system Ollama install is still running. Removing it needs the `jetson` sudo password.
+- Retrained EfficientNet-B0. Best validation accuracy 0.8774 at epoch 10. Test accuracy 0.8901 (494/555), test loss 0.4720. Crops under 32 pixels refused: train 851, validation 109, test 62.
+- Test recall: military_aircraft 48/48, military_warship 96/99, Radar 31/34, camouflage_soldier 52/57, military_vehicle 137/151, M. Rocket Launcher 40/45, Artillery 42/49, Soldier 24/29, trench 4/7, Missile 20/36.
+- Trained linear SVM on HOG (96x96, 4,356 features). Validation accuracy 0.5133 (540/1052). Test accuracy 0.5063 (281/555). Checkpoint `Data/HogSvm.pkl` is 349,422 bytes.
+- Previous EfficientNet checkpoint saved as `Data/EffNet_b0_before_mv.pt`.
+- Removed air-fighter and bomber from `Data/YOLO/MV`. Remaining classes are armoured personnel carrier, soldier, and tank.
+
+## Previous (22 Sep 2026)
 
 - Removed VISDRONE from code, `Data/DATASETS.md`, the YOLO source/train/run/model
   folders, and the `Data/CNN` crop dump (457057 crops removed, 55388 kept).
@@ -105,9 +151,9 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
   Change the model name in that script, then run it from the folder. `Data/YOLO-Models`,
   `Data/YOLO-Train`, and `Data/YOLO-Runs` were removed. Do not start training unless asked.
 - Finished weights now sit in the dataset folder: `Data/YOLO/KIIT-MiTA/yolo26m.pt`
-  (test mAP50 0.6884, 6 remapped classes) and `Data/YOLO/MV/yolo26m.pt`
-  (test mAP50 0.5663, the 5 names in `data.yaml`). military_object_dataset
-  has no finished weights.
+  (test mAP50 0.6884, 6 remapped classes). The MV 5-class run was renamed to
+  `Data/YOLO/MV/yolo26m_5class.pt` (test mAP50 0.5663) when air-fighter and
+  bomber were removed. military_object_dataset has no finished weights.
 - SULAND v2 is no longer in `Data/YOLO`. The catalog section is still in `Data/DATASETS.md`.
 - Linux training server in `.env` is a University of Siegen host (`server-adso.es.eti.uni-siegen.de`). OpenVPN is required. After VPN, ping works and Remote Desktop port 3389 is open. Port 22 is dropped by the campus firewall, so SSH from this PC does not connect. Tailscale 1.102.4 is installed on the server and is not logged in. The user will clone the private GitHub repo `ShadAhammed/Sentinel` on that machine instead. Do not copy `.env` values here.
 - FRDM-MCXN947 is reachable on J17: MCU-Link CMSIS-DAP V3.128, serial ASSB42DOVHG3Y, COM6 opens.
@@ -133,7 +179,6 @@ Current **CNN-Data** (working CNN set, reshaped 21 Sep 2026):
 
 ## Next (if the user does not specify)
 
-Hello World is running on the FRDM-MCXN947. Debug session started 1:28 AM (LinkServer probe ASSB42DOVHG3Y, core cm33_core0). COM6 at 115200 printed "MCUX SDK version: 2026.06.00" and "hello world." once at startup, then waits for a key. Serial Monitor 0.13.1 is installed in Cursor and currently holds COM6.
-Wait for a request before training a new Edge Impulse model. The current
-Studio model is still the older MobileNetV2 run.
-Private GitHub repo: https://github.com/ShadAhammed/Sentinel. It has the code, Cursor rules, yaml, run scripts, and weights. Image datasets stay on this PC (`.env`, `Data/CNN`, `Data/CNN-Data`, YOLO images and labels). Clone that repo on the Linux GPU machine. SSH port 22 is still blocked from this PC.
+Demo path is the Jetson Orin NX 16GB: YOLO26s or the existing YOLO26m detector, then `Data/EffNet_b0.pt` on the crops. Leave the MCXN947 and Edge Impulse alone unless asked.
+Private GitHub repo: https://github.com/ShadAhammed/Sentinel. It has the code, Cursor rules, yaml, run scripts, and weights. Image datasets stay on this PC. A transfer archive `E:\sentinel-datasets.tar` holds `Data/YOLO` and `Data/CNN-Data` for copy over Remote Desktop. SSH port 22 is still blocked from this PC.
+German executive summary: `SENTINEL-X Kurzfassung.docx`. Justified body text. Audience is an entrepreneurship center judging how innovative the project is. Partner pitch was removed. The English markdown stays.

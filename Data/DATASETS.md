@@ -2,7 +2,7 @@
 
 ## CNN-Training
 
-**10 classes.** These are the labels in `Data/CNN-Data` after the 21 September 2026 cleanup. Training counts are the local `train` and `validation` crops combined. `Tank` and `military_truck` are now `military_vehicle`, so that class is above the old 1,000-image cap. The trench test crops are now in training, and the old trench training crops are now the test set. 100 `military_warship` crops (10% of the previous 1,000 training crops) are now in test. The other 900 stay in training.
+**10 classes.** These are the labels in `Data/CNN-Data` after the 23 September 2026 MV addition. Training counts are the local `train` and `validation` crops combined. One MV source photo was added (the train copy when it existed). Armoured personnel carriers and tanks went into `military_vehicle`. MV soldiers went into `camouflage_soldier`. Crops with a short side under 32 pixels were not added (345 refused).
 
 | Label | Training instances | Test instances |
 |---|---:|---:|
@@ -11,25 +11,25 @@
 | Missile | 411 | 36 |
 | Radar | 253 | 34 |
 | Soldier | 1,000 | 50 |
-| camouflage_soldier | 1,000 | 50 |
+| camouflage_soldier | 1,109 | 58 |
 | military_aircraft | 1,000 | 50 |
-| military_vehicle | 3,000 | 150 |
+| military_vehicle | 3,689 | 187 |
 | military_warship | 900 | 100 |
 | trench | 37 | 7 |
-| **Total** | **8,743** | **572** |
+| **Total** | **9,541** | **617** |
 
 ---
 
-This file describes the object-detection datasets in `Data/YOLO`. KIIT-MiTA and military_object_dataset counts were computed from the files on disk (21 September 2026). SULAND v2 and MV counts were computed on 22 September 2026. They are not copied from vendor marketing pages.
+This file describes the object-detection datasets in `Data/YOLO`. KIIT-MiTA and military_object_dataset counts were computed from the files on disk (21 September 2026). SULAND v2 counts were computed on 22 September 2026. MV counts were recomputed on 23 September 2026 after air-fighter and bomber were removed. They are not copied from vendor marketing pages.
 
 | Dataset | Task | Format | Classes | Images | Label files | Instances | Disk |
 |---|---|---|---:|---:|---:|---:|---:|
 | KIIT-MiTA | Military / tactical assets | YOLO | 7 | 1,700 | 1,700 | 4,586 | 125.3 MB |
 | military_object_dataset | Military + civilian objects | YOLO | 12 | 26,315 | 26,315 | 50,822 | 3,991.6 MB |
 | SULAND_v2 | Surface landmine detection | YOLO + COCO JSON | 2 | 33,771 | 33,771 | 12,427 | 15.5 GB |
-| MV | Military vehicle recognition | YOLO | 5 | 2,863 | 2,863 | 5,077 | 152.1 MB |
+| MV | Military vehicle recognition | YOLO | 3 | 2,702 | 2,702 | 4,238 | 152.1 MB |
 
-**Total:** 64,649 images, 72,912 annotated instances, ~19.8 GB.
+**Total:** 64,488 images, 72,073 annotated instances, ~19.8 GB. The MV disk figure is from before the aircraft photos were removed.
 
 ### Training instances only
 
@@ -235,33 +235,43 @@ The YAML `path` fields still say `./datasets/SULAND_v2/...`. Local training shou
 
 | ID | Class name |
 |---:|---|
-| 0 | air-fighter |
-| 1 | armoured personnel carrier |
-| 2 | bomber |
-| 3 | soldier |
-| 4 | tank |
+| 0 | armoured personnel carrier |
+| 1 | soldier |
+| 2 | tank |
+
+Air-fighter and bomber were removed on 23 September 2026. Photos that contained only those boxes were deleted. Mixed photos kept their other boxes. Class ids were packed to 0, 1, and 2.
 
 ### Train / valid / test size
 
 | Split | Folder | Images | Label files | Instances |
 |---|---|---:|---:|---:|
-| Train | `train/` | 2,502 | 2,502 | 4,383 |
-| Validation | `valid/` | 241 | 241 | 434 |
-| Test | `test/` | 120 | 120 | 260 |
-| **Total** | | **2,863** | **2,863** | **5,077** |
+| Train | `train/` | 2,361 | 2,361 | 3,684 |
+| Validation | `valid/` | 227 | 227 | 366 |
+| Test | `test/` | 114 | 114 | 188 |
+| **Total** | | **2,702** | **2,702** | **4,238** |
 
-33 training label files and 3 validation label files are empty. Those images were left in the source folder and skipped when the YOLO26m run was prepared.
+33 training label files and 3 validation label files are empty. Those images were already empty and were left in place.
+
+These 2,702 files come from **735** source photos. Every filename contains `.rf.`, which is Roboflow's generated-copy marker. Distinct source names: 599 in train, 215 in valid, and 111 in test.
+
+Keeping one file per source (the train file when it exists) leaves these labels. 91 photos have two or more classes, 634 have one class, and 10 have no boxes.
+
+| Class | Photos | Boxes on the kept file | Photos with only this class |
+|---|---:|---:|---:|
+| armoured personnel carrier | 309 | 431 | 219 |
+| soldier | 124 | 312 | 108 |
+| tank | 384 | 445 | 307 |
+
+119 sources are in train and valid, 57 are in train and test, and 14 are in valid and test. **57 of the 114 test files** are copies of a photo that is also in train.
 
 ### Instances per class
 
 | ID | Class | Train | Valid | Test | Total |
 |---:|---|---:|---:|---:|---:|
-| 0 | air-fighter | 453 | 34 | 67 | 554 |
-| 1 | armoured personnel carrier | 1,296 | 131 | 71 | 1,498 |
-| 2 | bomber | 246 | 34 | 5 | 285 |
-| 3 | soldier | 996 | 101 | 56 | 1,153 |
-| 4 | tank | 1,392 | 134 | 61 | 1,587 |
-| | **All** | **4,383** | **434** | **260** | **5,077** |
+| 0 | armoured personnel carrier | 1,296 | 131 | 71 | 1,498 |
+| 1 | soldier | 996 | 101 | 56 | 1,153 |
+| 2 | tank | 1,392 | 134 | 61 | 1,587 |
+| | **All** | **3,684** | **366** | **188** | **4,238** |
 
 `soldier` and `tank` here are MV class names. They are not the same label ids as KIIT-MiTA or military_object_dataset.
 
@@ -273,4 +283,4 @@ The YAML `path` fields still say `./datasets/SULAND_v2/...`. Local training shou
 2. **military_object_dataset** is the largest military set, but several classes are missing from val/test. Do not report per-class mAP on warship, weapon, or civilian without fixing the split.
 3. Combine the military datasets only after remapping class IDs. Those two label spaces are incompatible as-is.
 4. **SULAND v2** is a separate surface-landmine task (`butterfly`, `starfish`). Do not merge it into the CNN military labels.
-5. **MV** keeps its own five class names. Do not remap them onto the CNN label list. Bomber has only 5 test boxes, so its test score is thin.
+5. **MV** keeps three class names for YOLO training: armoured personnel carrier, soldier, and tank. The small CNN folds the carrier and tank into military_vehicle, and soldier into camouflage_soldier. Air-fighter and bomber are gone. `Data/YOLO/MV/yolo26m_5class.pt` is the old 5-class run. Do not load it for these labels.

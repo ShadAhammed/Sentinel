@@ -4,7 +4,7 @@ train_yolo26.py
 Train one YOLO26m detector for each original dataset in Data/YOLO.
 
 KIIT-MiTA and military_object_dataset follow the CNN label rules.
-MV keeps the five class names stored in its own data.yaml.
+MV keeps the three class names stored in its own data.yaml.
 """
 
 from __future__ import annotations
@@ -56,9 +56,7 @@ RANDOM_SEED = 42
 
 # MV is a separate Roboflow set. These names stay as written in data.yaml.
 MV_NAMES = [
-    "air-fighter",
     "armoured personnel carrier",
-    "bomber",
     "soldier",
     "tank",
 ]

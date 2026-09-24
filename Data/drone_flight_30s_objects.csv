@@ -1,0 +1,11 @@
+label,start_frame,end_frame,file
+Artillery,0,95,image_s3r2_kiit_1007.jpeg
+M. Rocket Launcher,96,191,image_s3r2_kiit_1013.jpeg
+Missile,192,287,image_s3r2_kiit_100.jpeg
+Radar,288,383,image_s3r2_kiit_1003.jpeg
+Soldier,384,479,image_s3r2_kiit_1005.jpeg
+camouflage_soldier,480,575,000065.jpg
+military_aircraft,576,671,018712.jpg
+military_vehicle,672,767,image_s3r2_kiit_1.jpeg
+military_warship,768,863,023769.jpg
+trench,864,959,011224.jpg

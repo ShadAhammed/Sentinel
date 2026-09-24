@@ -41,11 +41,12 @@ class YoloLabelTests(unittest.TestCase):
         self.assertNotIn("civilian_vehicle", names)
 
     def test_native_keeps_mv_class_ids(self) -> None:
-        text = "0 0.1 0.1 0.2 0.2\n4 0.5 0.5 0.2 0.2\n5 0.2 0.2 0.2 0.2\n"
+        # Class 2 is tank. Class 4 is outside the 3-class MV list.
+        text = "0 0.1 0.1 0.2 0.2\n2 0.5 0.5 0.2 0.2\n4 0.2 0.2 0.2 0.2\n"
         rewritten = train_yolo26.copy_native_text(text, len(train_yolo26.MV_NAMES))
         self.assertEqual(
             rewritten.strip().splitlines(),
-            ["0 0.1 0.1 0.2 0.2", "4 0.5 0.5 0.2 0.2"],
+            ["0 0.1 0.1 0.2 0.2", "2 0.5 0.5 0.2 0.2"],
         )
 
     def test_rewrite_drops_vehicle_and_remaps_tank(self) -> None:

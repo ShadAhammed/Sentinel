@@ -5,8 +5,6 @@ val: valid/images
 test: test/images
 
 names:
-  0: air-fighter
-  1: "armoured personnel carrier"
-  2: bomber
-  3: soldier
-  4: tank
+  0: "armoured personnel carrier"
+  1: soldier
+  2: tank

@@ -1,3 +1,6 @@
+These scores are the 5-class run from before air-fighter and bomber were removed.
+The weights file was renamed to yolo26m_5class.pt. Do not load it for the 3-class labels.
+
 Validation
 precision 0.6389
 recall 0.4953

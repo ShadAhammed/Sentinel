@@ -9,10 +9,18 @@ __pycache__/
 # Image datasets stay on this PC. The repo keeps scripts, yaml, and weights.
 Data/CNN/
 Data/CNN-Data/
+Data/CNN-MV/
 Data/YOLO/**/images/
 Data/YOLO/**/labels/
 Data/YOLO/**/labels.cache
 Data/YOLO/**/runs/
+
+# Video and the photos used to make it stay on this PC.
+*.mp4
+Data/video/cnn_correct/*.jpg
+
+# Dataset transfer archive. Too large for git.
+*.tar
 
 # Saved mistake review copies. The trainer can rebuild them.
 Data/mistake/

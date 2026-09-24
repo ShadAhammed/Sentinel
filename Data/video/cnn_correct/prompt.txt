@@ -1,0 +1,17 @@
+Use the 10 uploaded photos as the exact objects and the exact overhead look. Keep each object's shape and color. Do not replace them with a different gun, truck, plane, ship, or person. Do not turn them into close-ups.
+
+10 second video. One continuous shot. A drone flies forward, camera looking straight down from above. Daylight. Dry warzone ground: brown dirt, sparse yellow grass, tire tracks, and light dust. No titles, no logos, no watermark.
+
+The drone passes these objects in this order. Each one stays small in the frame and fully visible for about one second:
+1. 01_Artillery.jpg, the towed guns in an open field, seen from above.
+2. 02_Rocket_Launcher.jpg, the launcher trucks on a dirt track, seen from above.
+3. 03_Missile.jpg, the launcher with the pale missiles raised, seen from a drone.
+4. 04_Radar.jpg, the radar trucks in a field, seen from above.
+5. 05_Soldier.jpg, the soldiers standing on open dirt, seen from straight above.
+6. 06_Camouflage_Soldier.jpg, the leaf-covered soldier lying in brush.
+7. 07_Military_Aircraft.jpg, the camouflage cargo plane parked on the ground, seen from above.
+8. 08_Military_Vehicle.jpg, the tank, seen from straight above.
+9. 10_Trench.jpg, the open dirt trench, seen from straight above.
+10. 09_Warship.jpg, the grey warship, in water beside the land as the drone reaches the coast.
+
+Keep the camera overhead for the whole 10 seconds. Do not cut to a close-up or to a person's face.
