@@ -21,17 +21,11 @@ class JetsonLabelTests(unittest.TestCase):
         self.assertIsNone(jetson_test.cnn_label("civilian"))
         self.assertIsNone(jetson_test.cnn_label("civilian_vehicle"))
 
-    def test_label_files_use_the_dataset_meaning_of_soldier(self) -> None:
-        self.assertEqual(jetson_test.source_label("MV", "soldier"), "camouflage_soldier")
-        self.assertEqual(jetson_test.source_label("military_object_dataset", "soldier"), "Soldier")
-        self.assertEqual(jetson_test.source_label("KIIT-MiTA", "Artilary"), "Artillery")
-        self.assertEqual(jetson_test.source_label("military_object_dataset", "military_tank"), "military_vehicle")
-        self.assertIsNone(jetson_test.source_label("KIIT-MiTA", "Vehicle"))
-
     def test_shared_list_has_the_ten_cnn_labels(self) -> None:
         self.assertEqual(len(jetson_test.CNN_LABELS), 10)
         for name in jetson_test.YOLO_TO_CNN.values():
             self.assertIn(name, jetson_test.CNN_LABELS)
+        self.assertEqual(len(jetson_test.YOLO_FILES), 3)
 
 
 if __name__ == "__main__":

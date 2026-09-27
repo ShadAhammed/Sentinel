@@ -1,4 +1,4 @@
-# Secrets stay on this machine. Copy .env.example to .env after clone.
+# Local secrets, if a machine has a .env. Never commit it.
 .env
 
 # Python caches.

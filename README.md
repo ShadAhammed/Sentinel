@@ -1,12 +1,12 @@
 # SENTINEL-X
 
-Research demonstrator for aerial reconnaissance on a Jetson Orin NX. Three YOLO detectors place boxes, EfficientNet-B0 names each crop, and a local Qwen2.5 7B answers from that tally. A person remains in the decision.
+Research demonstrator for aerial reconnaissance. The whole pipeline runs on one Jetson Orin NX: three YOLO detectors place boxes, EfficientNet-B0 names each crop, and a local Qwen2.5 7B answers from that tally. A person remains in the decision.
 
 The architecture is in [SENTINEL-X Project Description.md](SENTINEL-X%20Project%20Description.md).
 
 ## In this repository
 
-Python scripts, tests, YOLO `data.yaml` files, and the notes under `Data/`.
+`Data/video/sentinel_demo.py`, the two helpers it imports, their tests, and these notes.
 
 ## On your machine, not in Git
 
