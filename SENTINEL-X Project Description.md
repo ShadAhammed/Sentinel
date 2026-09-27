@@ -2,7 +2,7 @@
 
 SENTINEL-X is a research demonstrator for aerial reconnaissance on a disconnected edge computer. A person remains in the decision. The assistant reports what the detectors found. It does not take a military action.
 
-The whole pipeline runs on one board, an NVIDIA Jetson Orin NX, in one window: `Data/video/sentinel_demo.py`. There is no second processor in this project.
+The whole pipeline runs on one board, an NVIDIA Jetson Orin NX, through one entry point: `run.py`. There is no second processor in this project.
 
 ## What runs
 
@@ -79,4 +79,18 @@ EfficientNet-B0, measured on the crop test split on 23 September 2026: accuracy 
 
 ## What a clone contains
 
-The demo window, the two helpers it imports, their tests, and these notes. Weights, image sets, and video stay on the machine that runs the demo.
+```
+run.py               - entry point: python run.py
+sentinel/
+  labels.py          - CNN class list, YOLO-to-CNN name map, weight/video paths
+  detection.py       - YOLO loading, EfficientNet crop classifier, box dedup
+  chat.py            - Qwen streaming chat, greeting, object-query helpers
+  gpu.py             - GPU percent and free-memory reader
+  window.py          - Tkinter demo window
+tests/
+  test_labels.py
+  test_detection.py
+  test_window.py
+```
+
+Weights, image sets, and video stay on the machine that runs the demo.

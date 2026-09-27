@@ -1,36 +1,53 @@
 # SENTINEL-X
 
-Research demonstrator for aerial reconnaissance. The whole pipeline runs on one Jetson Orin NX: three YOLO detectors place boxes, EfficientNet-B0 names each crop, and a local Qwen2.5 7B answers from that tally. A person remains in the decision.
+Research demonstrator for aerial reconnaissance. The whole pipeline runs on one Jetson Orin NX: three YOLO detectors place boxes, EfficientNet-B0 names each crop, and a local Qwen2.5 7B answers from that tally. A person remains in the decision loop.
 
-The architecture is in [SENTINEL-X Project Description.md](SENTINEL-X%20Project%20Description.md).
+Architecture details are in [SENTINEL-X Project Description.md](SENTINEL-X%20Project%20Description.md).
 
-## In this repository
+## Repository layout
 
-`Data/video/sentinel_demo.py`, the two helpers it imports, their tests, and these notes.
+```
+run.py               - entry point: python run.py
+sentinel/
+  __init__.py
+  labels.py          - CNN class list, YOLO-to-CNN name map, weight/video paths
+  detection.py       - YOLO loading, EfficientNet crop classifier, box dedup
+  chat.py            - Qwen streaming chat, greeting, object-query helpers
+  gpu.py             - GPU percent and free-memory reader (Orin + nvidia-smi)
+  window.py          - Tkinter demo window (video pane + chat pane)
+tests/
+  test_labels.py
+  test_detection.py
+  test_window.py
+```
 
 ## On your machine, not in Git
 
 - `.env` (copy from `.env.example`)
-- image datasets and crop folders
-- video (`*.mp4`)
-- weights: `*.pt`, `*.engine`, `*.pkl`
+- image datasets and crop folders under `Data/`
+- video `Data/video/combined_drone.mp4`
+- weights (not committed - download or train separately):
+  - `Data/YOLO-Models-Final/KIIT-MiTA-yolo26s.pt`
+  - `Data/YOLO-Models-Final/MV-yolo26s.pt`
+  - `Data/YOLO-Models-Final/military-yolov8n.pt`
+  - `Data/EffNet_b0.pt`
 
-The demo expects these files next to the scripts:
-
-- `Data/YOLO-Models-Final/KIIT-MiTA-yolo26s.pt`
-- `Data/YOLO-Models-Final/MV-yolo26s.pt`
-- `Data/YOLO-Models-Final/military-yolov8n.pt`
-- `Data/EffNet_b0.pt`
-- `Data/video/combined_drone.mp4`
-
-On the Jetson, a `.engine` beside a `.pt` is loaded instead of that `.pt`.
+On the Jetson a `.engine` beside a `.pt` is loaded instead of that `.pt`.
 
 ## Run the window
 
-From `Data/video` on a machine with the weights, the clip, and CUDA:
+Requires the weights, the clip, CUDA, and the local Ollama model:
 
-```text
-python sentinel_demo.py
+```bash
+python run.py
 ```
 
 Detection refuses CPU. The chat model is the local Ollama tag `qwen2.5:7b-instruct-q4_K_M`.
+
+## Run the tests
+
+```bash
+python -m unittest discover -s tests -p "test_*.py" -v
+```
+
+No GPU or weights needed - all tests mock or stub external dependencies.
