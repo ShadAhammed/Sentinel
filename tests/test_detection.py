@@ -4,7 +4,7 @@ import unittest
 
 import numpy as np
 
-from sentinel.detection import (
+from src.detection import (
     confidence_percent,
     efficientnet_hits,
     final_label,

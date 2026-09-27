@@ -81,7 +81,7 @@ EfficientNet-B0, measured on the crop test split on 23 September 2026: accuracy 
 
 ```
 run.py               - entry point: python run.py
-sentinel/
+src/
   labels.py          - CNN class list, YOLO-to-CNN name map, weight/video paths
   detection.py       - YOLO loading, EfficientNet crop classifier, box dedup
   chat.py            - Qwen streaming chat, greeting, object-query helpers

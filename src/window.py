@@ -35,13 +35,13 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageTk
 
 # The package modules supply all detection, chat, and hardware helpers.
-from sentinel.chat import (
+from src.chat import (
     GREETING,
     asked_object,
     stream_chat,
     warm_chat_model,
 )
-from sentinel.detection import (
+from src.detection import (
     LABEL_COLOR,
     cnn_prediction_for_crop,
     confidence_percent,
@@ -50,8 +50,8 @@ from sentinel.detection import (
     load_effnet,
     yolo_boxes,
 )
-from sentinel.gpu import format_gpu_free, read_gpu
-from sentinel.labels import EFFNET_PATH, VIDEO_PATH, YOLO_FILES, YOLO_FINAL_DIR
+from src.gpu import format_gpu_free, read_gpu
+from src.labels import EFFNET_PATH, VIDEO_PATH, YOLO_FILES, YOLO_FINAL_DIR
 
 # ---- Module-level constants kept here because they only affect the window ----
 

@@ -8,7 +8,7 @@ Architecture details are in [SENTINEL-X Project Description.md](SENTINEL-X%20Pro
 
 ```
 run.py               - entry point: python run.py
-sentinel/
+src/
   __init__.py
   labels.py          - CNN class list, YOLO-to-CNN name map, weight/video paths
   detection.py       - YOLO loading, EfficientNet crop classifier, box dedup

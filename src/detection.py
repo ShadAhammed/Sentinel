@@ -20,7 +20,7 @@ import torch
 from PIL import Image
 from torchvision import transforms
 
-from sentinel.labels import CNN_LABELS, cnn_label
+from src.labels import CNN_LABELS, cnn_label
 
 # YOLO confidence gate. Boxes below this score are discarded.
 CONFIDENCE = 0.25

@@ -4,9 +4,9 @@ import unittest
 
 import numpy as np
 
-from sentinel.chat import GREETING, asked_object
-from sentinel.gpu import format_gpu_free, parse_gpu_line
-from sentinel.window import (
+from src.chat import GREETING, asked_object
+from src.gpu import format_gpu_free, parse_gpu_line
+from src.window import (
     CHAT_BG,
     MATRIX,
     DemoWindow,

@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
-# One level up from sentinel/ is the project root (Sentinel-X/).
+# One level up from src/ is the project root (Sentinel-X/).
 _ROOT = Path(__file__).resolve().parent.parent
 
 # Local data folder - weights and video live here. Not in the repository.

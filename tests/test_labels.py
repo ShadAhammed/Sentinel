@@ -2,7 +2,7 @@
 
 import unittest
 
-from sentinel.labels import CNN_LABELS, EFFNET_PATH, VIDEO_PATH, YOLO_FILES, YOLO_TO_CNN, cnn_label
+from src.labels import CNN_LABELS, EFFNET_PATH, VIDEO_PATH, YOLO_FILES, YOLO_TO_CNN, cnn_label
 
 
 class LabelMapTests(unittest.TestCase):

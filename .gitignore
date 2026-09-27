@@ -1,6 +1,10 @@
 # Local secrets, if a machine has a .env. Never commit it.
 .env
 
+# Cursor IDE rules - machine-specific, not for public repo.
+.cursor/
+.cursorrules
+
 # Python caches.
 __pycache__/
 *.pyc
