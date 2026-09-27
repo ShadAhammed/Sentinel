@@ -1,0 +1,42 @@
+---
+description: Keep every GitHub repository clean, public-safe, and professional.
+alwaysApply: true
+---
+
+# Public Repository Hygiene
+
+For every project, keep the GitHub repository clean, public-safe, and professional.
+
+Commit only source code, configuration templates, documentation, tests,
+reproducible scripts, and small demo assets that are safe to publish.
+
+Never commit:
+
+- secrets, API keys, or credentials
+- private, company, or university data
+- large datasets or proprietary files
+- personal information
+- unnecessary build artifacts, logs, caches, or generated outputs
+- large model weights
+
+Use `.gitignore` and example or template files (for example `.env.example`,
+`config.example.yaml`) for anything environment-specific or sensitive.
+
+Before creating or modifying files intended for Git, check that they are
+appropriate for a public repository.
+
+Treat the public GitHub repository as a clean, reproducible representation
+of the project. It is not a copy of the entire development workspace.
+
+```text
+# BAD - a real secret and a local dump committed
+.env
+data/private_export.csv
+models/large-weights.bin
+
+# GOOD - ignored locally, template committed
+.env
+data/
+*.bin
+!.env.example
+```

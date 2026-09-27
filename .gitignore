@@ -1,4 +1,4 @@
-# Secrets stay on this PC. Copy the values into a local .env after clone.
+# Secrets stay on this machine. Copy .env.example to .env after clone.
 .env
 
 # Python caches.
@@ -6,16 +6,23 @@ __pycache__/
 *.pyc
 .pytest_cache/
 
-# Image datasets stay on this PC. The repo keeps scripts, yaml, and weights.
+# Image datasets stay on the training machine. The repo keeps scripts, yaml, and tests.
 Data/CNN/
 Data/CNN-Data/
 Data/CNN-MV/
+Data/CNN-Combined/
 Data/YOLO/**/images/
 Data/YOLO/**/labels/
 Data/YOLO/**/labels.cache
 Data/YOLO/**/runs/
 
-# Video and the photos used to make it stay on this PC.
+# Trained weights and engines stay on the training machine and the Jetson.
+*.pt
+*.engine
+*.onnx
+*.pkl
+
+# Video and the photos used to make it stay on this machine.
 *.mp4
 Data/video/cnn_correct/*.jpg
 
@@ -25,9 +32,9 @@ Data/video/cnn_correct/*.jpg
 # Saved mistake review copies. The trainer can rebuild them.
 Data/mistake/
 
-# Empty local run folders.
+# Local run folders.
 runs/
 Data/runs/
 
-# Same file as Data/yolo26n.pt.
-/yolo26n.pt
+# Editor files can hold local paths.
+*.code-workspace

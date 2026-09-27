@@ -5,7 +5,7 @@ alwaysApply: true
 
 # Simple, Commented Code
 
-This project uses CursorRules-Shad (`00` to `50`). Those rules stay in force.
+This project uses CursorRules-Shad (`00` to `50`, plus `60-public-repository`). Those rules stay in force.
 
 On top of Shad, every Sentinel-X script must be easy to read.
 
