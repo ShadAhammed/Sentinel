@@ -26,6 +26,8 @@ language. A person makes every decision.
 
 ## Architecture
 
+![SENTINEL-X architecture](assets/architecture.jpg)
+
 ```
 Video frame (1280 x 720, 24 fps)
         |
@@ -113,7 +115,7 @@ tests/
   test_labels.py     - label mapping and path constant tests
   test_detection.py  - IoU, dedup, crop gate, confidence formatting
   test_window.py     - clock, caption, split-view, GPU reader, DemoWindow widget tests
-SENTINEL-X Project Description.md   - full technical write-up
+docs/technical-description.md   - full technical write-up
 ```
 
 ---
@@ -203,7 +205,7 @@ OK
 
 The three YOLO detectors were trained on public datasets. Full citation details are
 in the **Credit** tab of the running application and in
-[SENTINEL-X Project Description.md](SENTINEL-X%20Project%20Description.md).
+[docs/technical-description.md](docs/technical-description.md).
 
 | Detector | Dataset | License |
 |---|---|---|

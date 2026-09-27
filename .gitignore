@@ -1,16 +1,29 @@
-# Local secrets, if a machine has a .env. Never commit it.
+# ---- Secrets and environment ----
 .env
 
-# Cursor IDE rules - machine-specific, not for public repo.
+# ---- IDE and editor files ----
 .cursor/
 .cursorrules
+*.code-workspace
 
-# Python caches.
+# ---- Python caches ----
 __pycache__/
 *.pyc
+*.pyo
 .pytest_cache/
 
-# Image datasets stay on the training machine. The repo keeps scripts, yaml, and tests.
+# ---- Trained weights and inference engines ----
+# Keep these on the training machine and the Jetson. Never commit.
+*.pt
+*.engine
+*.onnx
+*.pkl
+
+# ---- Video files ----
+*.mp4
+
+# ---- Dataset image folders ----
+# Raw image datasets stay on the training machine.
 Data/CNN/
 Data/CNN-Data/
 Data/CNN-MV/
@@ -20,25 +33,11 @@ Data/YOLO/**/labels/
 Data/YOLO/**/labels.cache
 Data/YOLO/**/runs/
 
-# Trained weights and engines stay on the training machine and the Jetson.
-*.pt
-*.engine
-*.onnx
-*.pkl
-
-# Video and the photos used to make it stay on this machine.
-*.mp4
-Data/video/cnn_correct/*.jpg
-
-# Dataset transfer archive. Too large for git.
-*.tar
-
-# Saved mistake review copies. The trainer can rebuild them.
+# ---- Training artefacts ----
 Data/mistake/
-
-# Local run folders.
+Data/video/cnn_correct/
 runs/
 Data/runs/
 
-# Editor files can hold local paths.
-*.code-workspace
+# ---- Large transfer archives ----
+*.tar

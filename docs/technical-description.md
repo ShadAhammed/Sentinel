@@ -1,6 +1,6 @@
 # SENTINEL-X - Technical Project Description
 
-![SENTINEL-X banner](assets/banner.jpg)
+![SENTINEL-X banner](../assets/banner.jpg)
 
 **Category:** Embedded AI / Computer Vision / Edge Deployment
 **Platform:** NVIDIA Jetson Orin NX 16 GB
