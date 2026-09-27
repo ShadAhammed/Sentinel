@@ -1,5 +1,7 @@
 # SENTINEL-X
 
+![SENTINEL-X banner](assets/banner.jpg)
+
 **Real-time aerial reconnaissance demonstrator - air-gapped, edge-deployed, human in the loop.**
 
 Three YOLOv8 detectors, an EfficientNet-B0 crop classifier, and a local Qwen 2.5 7B LLM running
