@@ -12,7 +12,6 @@ from src.window import (
     DemoWindow,
     cnn_caption,
     dataset_credits,
-    efficientnet_hits,
     fit_frame,
     format_clock,
     format_detection_context,

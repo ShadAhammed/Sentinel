@@ -1060,18 +1060,18 @@ class DemoWindow:
                 (max(1, int(width * scale)), max(1, int(height * scale))),
                 Image.Resampling.BILINEAR,
             )
-        window = tk.Toplevel(self.root)
-        window.title(label)
-        window.configure(bg=CHAT_BG)
+        popup = tk.Toplevel(self.root)
+        popup.title(label)
+        popup.configure(bg=CHAT_BG)
         photo = ImageTk.PhotoImage(image)
-        window.photo = photo  # type: ignore[attr-defined]
-        tk.Label(window, image=photo, bg=CHAT_BG).pack(padx=16, pady=(16, 8))
+        popup.photo = photo  # type: ignore[attr-defined]
+        tk.Label(popup, image=photo, bg=CHAT_BG).pack(padx=16, pady=(16, 8))
         tk.Label(
-            window,
+            popup,
             text=f"{label}   {confidence_percent(confidence)}   at {clock}",
             font=("Consolas", 12), fg=MATRIX, bg=CHAT_BG,
         ).pack(pady=(0, 16))
-        self.picture_windows.append(window)
+        self.picture_windows.append(popup)
 
     # ---- Chat interaction -------------------------------------------------
 

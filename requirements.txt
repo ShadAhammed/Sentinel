@@ -1,0 +1,17 @@
+# SENTINEL-X runtime dependencies
+#
+# PyTorch and TorchVision
+# -----------------------
+# On Jetson Orin NX (JetPack 6): do NOT pip-install torch here.
+# Use the aarch64 wheel supplied by NVIDIA:
+#   https://developer.nvidia.com/embedded/jetpack
+#
+# On an x86 machine with CUDA 12.x, run:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# Then install the packages below on both platforms:
+
+ultralytics>=8.0.0
+opencv-python>=4.8.0
+Pillow>=10.0.0
+numpy>=1.24.0
