@@ -29,13 +29,20 @@ Target event: defence / security expo, 24 September 2026, Essen.
 
 ## Pipeline
 
-`Data/video/sentinel_demo.py` is the window. Run `python sentinel_demo.py` from `Data/video`.
+Run `python run.py` from the repo root.
 
 1. Three YOLO detectors place boxes on `combined_drone.mp4`.
 2. EfficientNet-B0 names each crop. Short side under 32 pixels is skipped.
 3. Local Qwen (`qwen2.5:7b-instruct-q4_K_M`) answers from that text tally, only up to the frame on screen.
 
-Helpers: `Data/jetson_test.py` (10 labels, CNN loader) and `Data/join_and_detect_video.py` (boxes and crops). Tests: `Data/test_jetson_test.py`, `Data/test_join_and_detect_video.py`, `Data/video/test_sentinel_demo.py`.
+Package layout (`sentinel/`):
+- `labels.py` - CNN class list, YOLO-to-CNN name map, weight/video path constants
+- `detection.py` - YOLO loading, EfficientNet crop classifier, box dedup (merged from old jetson_test.py and join_and_detect_video.py)
+- `chat.py` - Qwen streaming chat, greeting, object-query helpers
+- `gpu.py` - GPU percent and free-memory reader (Orin + nvidia-smi)
+- `window.py` - Tkinter demo window (renamed from Data/video/sentinel_demo.py)
+
+Entry point: `run.py`. Tests: `tests/test_labels.py`, `tests/test_detection.py`, `tests/test_window.py` (49 tests, all pass).
 
 Chat is 40 percent of the row, video 60 percent. Detection uses `cuda:0` and refuses CPU. A `.engine` beside a `.pt` is loaded when it exists. Overlapping boxes count once, keeping the higher EfficientNet score. A YOLO box EfficientNet did not name is not counted.
 
@@ -62,7 +69,7 @@ Public: https://github.com/ShadAhammed/Sentinel. The tree is the window, two hel
 
 ## Last change (28 Sep 2026)
 
-Removed the training scripts, YOLO yaml, Edge Impulse uploader, clip joiner, dataset catalog, and the German summary. Those files are not part of the running pipeline. Local weights, video, and image folders were left on disk.
+Restructured into `sentinel/` package. Monolithic `Data/video/sentinel_demo.py` (1665 lines) split into five focused modules: `labels.py`, `detection.py`, `chat.py`, `gpu.py`, `window.py`. Old helper scripts (`Data/jetson_test.py`, `Data/join_and_detect_video.py`) and their tests removed from Git (merged into `sentinel/detection.py`). Tests moved to `tests/`. Entry point is now `python run.py`. 49 tests pass. Pushed to GitHub.
 
 ## Next
 
